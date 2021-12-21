@@ -1,0 +1,428 @@
+
+Agenda Day 1
+-------------
+intro
+getting around
+        basic commands
+        file
+        directory
+
+UFS
+vi editor
+file permissions
+file links
+
+
+        file
+
+        1. create
+
+                        cat > filename
+                                data
+                        ^d
+
+        2. touch filename - to change the timestamp of a file
+                                if the file doesnt exist, it will create a new one
+
+
+        3. cat filename - to view the content of the file
+
+        4. mv oldname newname - to rename the file
+
+        5. mv existingfile newlocation - move the file to a new location
+           mv albert.txt  office/mail/inbox
+           mv albert.txt  office/mail/inbox/scientist.txt
+
+
+
+        6. rm filename - to remoe a file
+
+
+        7. rm -i filename - to remove with interactiveness
+
+        8. rm -f filename - to  remove with force
+
+        9. cp -r sourcefolder newlocation
+
+                        copies the complete folder to a new location
+
+
+
+
+Vi editor
+------------------
+
+                vi - visual editor
+
+
+                how to make a file
+
+                #  vi abc.txt <-- will open the file to edit
+
+                        if the file already exists, then it would open it
+
+                        if it doesnt exist, it will create it as a new one
+
+
+                Esc-->  Command mode - default mode
+                                |
+                [iao/AIO]-----------------------[:]---------
+                 |                              |
+                insert mode                     Ex mode / last line mode
+                                                [ special commands ]
+
+
+
+                a       - append : next letter
+                i       - insert mode : at the cursor
+                o       - open line mode :  below the current line
+
+                A       - append mode : at the end of the line
+                I       - insert mode at the beg of the line
+                O       - open line mode above the current line
+
+                dd      - delete the current line
+
+                dw      - delete the current word
+                5dw     - delete 5 words from the cursor
+
+                5dd     - delete 5 lines from the cursor
+
+                u       - undo
+
+                5u      - last 5 actions undone
+
+
+                cut             copy
+                |               |
+word            dw              yw
+words           5dw             5yw
+
+line            dd              yy
+lines           6dd             6yy
+                |               |
+                -----------------
+                        |
+                        paste
+                        |
+                        p - one time paste
+                        50p - 50 times paste
+
+
+1010|jack|ssalesmanalesman|sales|12-jan-98|9292
+1010|jack|salesman|sales|12-jan-98|9292
+1010|jack||sales|12-jan-98|9292
+1010|jack|salesman|purchase12-jan-98|9292
+1010|jack|salesman|psale |12-jan-98|9292
+1010|jack|salesman|accounts|12-jan-98|9292
+1010|jack|salesman||12-jan-98|9292
+
+
+
+        :wq             - write and quit
+
+        :q!             - discard chagnes and quit
+
+        :w              - write and continue editing
+
+        :q              - quit if the file is upto date
+
+        :set number     - to enable line numbers
+
+        :set nonumber   - to disable line numbers
+
+        :100    goto the line number 100
+
+        :$      goto the last line
+
+        :1      first line
+
+
+        :5,10d  delete ranged lines
+
+        :5d     delete 5th line
+
+        :5,10yy copy ranged lines
+
+        p to paste it
+
+
+                v - to mark the selection start -- visual mode
+
+                        expand using arrow keys to the desired end point
+
+                press y or d to copy or cut, p to paste it
+
+
+
+search a pattern
+
+        /pattern        forward search
+
+                        n to goto the next occurance
+
+                        N to goto the prev occurance
+
+
+
+        ?pattern        from cursor to backward search
+
+
+        :set ignorecase  - case would be ignored
+
+        :set noignorecase - case would not be ignored
+
+        /man
+
+        /\<man - words begin with man
+
+        /man\> - words end with man
+
+
+        /\<man\> - whole word
+
+
+
+Search and replace  pattern
+
+        1. :s/a/A       -    current line       first occurence
+        1. :s/a/A/g     -    current line       all  occurences
+
+
+
+        2. :5s/a/A      5th line        first occurence
+        2. :5s/a/A/g    5th line        all occurences
+
+        3. :5,10s/a/A   5 to 10h line   first occurence
+        3. :5,10s/a/A/g 5 to 10h line   all occurences
+
+
+        4. 1,$s/a/A     all lines       first occurence
+        4. 1,$s/a/A/g   all lines       all occurences
+
+
+
+
+        File permissions - basic security model
+
+
+
+                3 types of users
+
+                        user    - owner of the file/directory
+
+                        group   - logical collection of trusted users
+
+                        other   - neither the user nor the group member
+
+
+                3 types of permissions
+
+
+
+        -----------------------------------------------------------
+                        file                    directory
+        -----------------------------------------------------------
+
+        read            cat*                    ls
+                        vi
+
+        -----------------------------------------------------------
+
+                        vi *                    making internal contents, eg
+        write           cat >>                  mkdir, rmdir, mv, cp,
+                        cat >                   cat >, rm,
+
+        -----------------------------------------------------------
+
+        execute         run as a                change into the
+                        script                  directory
+
+        -----------------------------------------------------------
+
+                        apply permission
+                                |
+                        -----------------------
+                        |               |
+                character               octal
+                        |               |
+                        r               4       100
+                        w               2       010
+                        x               1       001
+                        ---             --      ----
+                        rwx             7       111
+
+
+        chmod u+x   filename
+        chmod u+rwx filename
+
+        chmod ugo+rwx filename
+
+        chmod u+rw,o-w,g+r filename
+
+        chmod o+r,g-r,u+w filename
+
+
+        chmdo r-u filename // illegal
+
+
+
+
+Default permission settings
+----------------------------
+
+        umask - user mask
+
+
+                                file            directory
+
+        base permissions        6 6 6           7 7 7
+
+        user mask value      0  0 2 6        0  0 2 6
+                        ----------------------------------
+                        -       6 4 0           7 5 1
+
+
+                Tune the umask in a such a way
+                to acquire execute permission on a file [ minmum requirement ]
+
+stage i
+
+                                file            directory
+
+        base permissions        110 110 110     111 111 111 <-- bit pattern
+
+        user mask value      0  000 101 101     000 101 101 <- bit pattern
+                        -------------------------------------
+
+
+stage ii
+
+                                file            directory
+
+        base permissions        110 110 110     111 111 111 <-- bit pattern
+
+        user mask value      0  111 010 010     111 010 010 <- bit pattern
+                        -------------------------------------
+                          &     110 010 010     111 010 010
+
+
+
+
+6               4       100
+                2       010
+
+3               1       001
+        --------------
+                7       111
+
+
+
+
+
+todo list
+----------1
+2
+2
+
+3
+3
+3
+
+
+
+
+------------------------------------------------------------------------
+                |       urgent          |       not urgent      |
+                |                       |                       |
+                |                       |                       |
+------------------------------------------------------------------------
+                |                       |                       |
+important       |                       |                       |
+                |                       |                       |
+------------------------------------------------------------------------
+                |                       |                       |
+not important   |                       |                       |
+                |                       |                       |
+------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+accounts
+[ chetan, rikshit, lakhan, rajesh , aravind ]
+
+
+
+  uuu ggg ooo ACL  linkcount    username        groupname       size    filename
+d rwx rwx rwx .         2       rajesh          accounts        100     abc.xls
+  rwx rwx ---           1       rajesh          accounts        900     biryani.xls
+
+
+ + grant permission
+ - revoke permission
+ = assign permission by overlapping the current permission set
+
+
+
+                chmod userCategory+-=permissionType
+                        [ugo]     +-=  rwx
+
+
+
+File links
+---------------------
+
+
+                soft link               hard link
+                |                       |
+                short cut of            another name to
+                file's or               and existing file
+                directory's             (by sharing inode )
+                path
+
+        1. it is an extra file
+        2. to hold the path of
+                its target file
+                or a directory
+        3. size of soft link
+           is as per the letters
+           hold by the path
+
+        4. on deleting softlink
+                target remains
+
+        5. on deleting/misplacing
+                target will
+                break the softlink
+
+
+
+
+
+        ln -s pathofFileOrDirectory   [ if softlink name is missing, it will
+                                        carry the last node name of the path]
+
+
+        e.g
+
+        ln -s  office/inbox/mail   <-- mail would be the soft link name
+
+
+        ln -s office/inbox/mail/letter.txt    doc.txt <-- soft link name
+
+        ln -s world/asia/india  ind  <-- ind a soft link to the directory
+
+
+
+
+
+
+
+
